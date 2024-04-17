@@ -27,6 +27,15 @@ namespace UserApi.Controllers
             return await _context.Users.ToListAsync();
         }
 
+        // Get: api/Users/tom.baguley@barclays.com
+        [HttpGet("email/{email}")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUserByEmail(string email)
+        {
+            var UserList = await _context.Users.Where(u => u.Email == email).ToListAsync();
+            return UserList;
+            //return UserList.Where(predicate: u => u.Email.Contains(email));
+        }
+
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(long id)
