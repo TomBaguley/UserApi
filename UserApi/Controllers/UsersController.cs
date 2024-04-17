@@ -22,23 +22,33 @@ namespace UserApi.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var UserList = await _context.Users.ToListAsync();
+            var DtoList = new List<UserDto>();
+            foreach (var item in UserList)
+            {
+                DtoList.Add(userToDto(item));
+            }
+            return DtoList;
         }
 
         // Get: api/Users/tom.baguley@barclays.com
         [HttpGet("email/{email}")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUserByEmail(string email)
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUserByEmail(string email)
         {
-            var UserList = await _context.Users.Where(u => u.Email.Contains(email)).ToListAsync();
-            return UserList;
-            //return UserList.Where(predicate: u => u.Email.Contains(email));
+            var UserList =  await _context.Users.Where(u => u.Email.Contains(email)).ToListAsync();
+            var DtoList = new List<UserDto>();
+            foreach (var item in UserList)
+            {
+                DtoList.Add(userToDto(item));
+            }
+            return DtoList;
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(long id)
+        public async Task<ActionResult<UserDto>> GetUser(long id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -46,8 +56,8 @@ namespace UserApi.Controllers
             {
                 return NotFound();
             }
-
-            return user;
+            
+            return userToDto(user);
         }
 
         // PUT: api/Users/5
@@ -59,6 +69,7 @@ namespace UserApi.Controllers
             {
                 return BadRequest();
             }
+           
 
             _context.Entry(user).State = EntityState.Modified;
 
@@ -112,5 +123,13 @@ namespace UserApi.Controllers
         {
             return _context.Users.Any(e => e.Id == id);
         }
+
+        private UserDto userToDto(User user) { 
+            UserDto dto = new UserDto();
+            dto.Id = user.Id;
+            dto.Name = user.Name;
+            dto.Email = user.Email;
+            return dto;
+        } 
     }
 }
