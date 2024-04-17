@@ -31,7 +31,7 @@ namespace UserApi.Controllers
         [HttpGet("email/{email}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUserByEmail(string email)
         {
-            var UserList = await _context.Users.Where(u => u.Email == email).ToListAsync();
+            var UserList = await _context.Users.Where(u => u.Email.Contains(email)).ToListAsync();
             return UserList;
             //return UserList.Where(predicate: u => u.Email.Contains(email));
         }
