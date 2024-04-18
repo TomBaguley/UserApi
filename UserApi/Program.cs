@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<UserContext>(options =>
     options.UseInMemoryDatabase("UserList"));
+builder.Services.AddDbContext<JobContext>(options =>
+    options.UseInMemoryDatabase("TaskList"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
